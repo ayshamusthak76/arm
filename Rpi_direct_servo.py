@@ -9,6 +9,11 @@ import tensorflow as tf #import Tensorflow
 from tensorflow.keras.models import model_from_json #Import tensorflow file saving
 import blynklib #Import Blynk library
 import RPi.GPIO as GPIO  # Import Raspberry Pi GPIO library
+import Servo_Controller as sc
+
+import time
+# Import the PCA9685 module.
+import Adafruit_PCA9685
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)  # Use physical pin numbering
@@ -22,19 +27,37 @@ servo4 = 3
 servo5 = 4
 servo6 = 5
 
+# GPIO.setup(motor1, GPIO.OUT)
+# GPIO.setup(motor2, GPIO.OUT)
+# motor1Servo = GPIO.PWM(motor1, 50) #Set Motors to PWM. Change this depeneding on how your motor controller works
+# motor1Servo.start(8)
+# motor2Servo = GPIO.PWM(motor2, 50) #Set Motors to PWM. Change this depeneding on how your motor controller works
+# motor2Servo.start(8)
+# motor1Servo.ChangeDutyCycle(7.5) #Had to change duty cycle twice due to a strange bug with my RPI
+# motor2Servo.ChangeDutyCycle(7.5) #Had to change duty cycle twice due to a strange bug with my RPI
 
-GPIO.setup(motor1, GPIO.OUT)
-GPIO.setup(motor2, GPIO.OUT)
-motor1Servo = GPIO.PWM(motor1, 50) #Set Motors to PWM. Change this depeneding on how your motor controller works
-motor1Servo.start(8)
-motor2Servo = GPIO.PWM(motor2, 50) #Set Motors to PWM. Change this depeneding on how your motor controller works
-motor2Servo.start(8)
-motor1Servo.ChangeDutyCycle(7.5) #Had to change duty cycle twice due to a strange bug with my RPI
-motor2Servo.ChangeDutyCycle(7.5) #Had to change duty cycle twice due to a strange bug with my RPI
+def servoControl(pwm, pin, value): #Change this function to be apprpriate for your robot and motor controllers
+    # motor1Servo.ChangeDutyCycle(7.5 + value) # I used this calculation due to tank steering
+    # motor2Servo.ChangeDutyCycle(7.5 - value)
+    value = sc.convert_angle_to_pwm_board_step(value)
+    sc.move_servo(pin,0,value)
 
-def servoControl(value): #Change this function to be apprpriate for your robot and motor controllers
-    motor1Servo.ChangeDutyCycle(7.5 + value) # I used this calculation due to tank steering
-    motor2Servo.ChangeDutyCycle(7.5 - value)
+# We sleep in the loops to give the servo time to move into position.
+# for i in range(180):
+#     servo7.angle = i
+#     time.sleep(0.03)
+# for i in range(180):
+#     servo7.angle = 180 - i
+#     time.sleep(0.03)
+
+# You can also specify the movement fractionally.
+# fraction = 0.0
+# while fraction < 1.0:
+#     servo7.fraction = fraction
+#     fraction += 0.01
+#     time.sleep(0.03)
+
+# pca.deinit()
 
 class Agent:
     def __init__(self):
@@ -63,8 +86,10 @@ class Agent:
 
     def act(self, state): #This method is for the AI behaving in autonomous mode
         state = np.reshape(state, (1, 240, 320, 3))
-        action = self.model.predict(state)[0][0]
-        action = (action * 2) - 1
+        # action = self.model.predict(state)[0][0]
+        # action = (action * 2) - 1
+        actionset = self.model.predict(state)[0][0] ############CHANGE THIS AND MAYBE THE STATE ALSO BECAUSE OF THAT
+        actionset = list((i*2)-1 for i in actionset)
         servoControl(action)
         return action
 
@@ -80,7 +105,8 @@ class Agent:
         return processedImg 
 
     def observeAction(self):
-        return (self.userSteering + 1) / 2
+        # return (self.userSteering + 1) / 2
+        list((i+1)/2 for i in self.userSteering) 
 
 agent = Agent() 
 BLYNK_AUTH = 'insert your code here' #insert your blynk code from your blynk project
@@ -90,45 +116,47 @@ blynk = blynklib.Blynk(BLYNK_AUTH)
 def write_virtual_pin_handler(pin, value):
     print("Servo1 value: ",float(value[0])) 
     agent.userSteering[0] = float(value[0]) #updates the AI's memory of steering angle
-    servoControl(float(value[0])) #changes the motors to appropriately turn based on the steering input
+    servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
 
 @blynk.handle_event('write V1') # We used pin v4 on the blynk app for steering control. Hence 'write V4'
 def write_virtual_pin_handler(pin, value):
     print("Servo2 value: ",float(value[0])) 
     agent.userSteering[1] = float(value[0]) #updates the AI's memory of steering angle
-    servoControl(float(value[0])) #changes the motors to appropriately turn based on the steering input
+    servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
 
 @blynk.handle_event('write V2') # We used pin v4 on the blynk app for steering control. Hence 'write V4'
 def write_virtual_pin_handler(pin, value):
     print("Servo3 value: ",float(value[0])) 
     agent.userSteering[2] = float(value[0]) #updates the AI's memory of steering angle
-    servoControl(float(value[0])) #changes the motors to appropriately turn based on the steering input
+    servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
 
 @blynk.handle_event('write V3') # We used pin v4 on the blynk app for steering control. Hence 'write V4'
 def write_virtual_pin_handler(pin, value):
     print("Servo4 value: ",float(value[0])) 
     agent.userSteering[3] = float(value[0]) #updates the AI's memory of steering angle
-    servoControl(float(value[0])) #changes the motors to appropriately turn based on the steering input
+    servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
 
 @blynk.handle_event('write V4') # We used pin v4 on the blynk app for steering control. Hence 'write V4'
 def write_virtual_pin_handler(pin, value):
     print(" Servo5 value: ",float(value[0])) 
     agent.userSteering[4] = float(value[0]) #updates the AI's memory of steering angle
-    servoControl(float(value[0])) #changes the motors to appropriately turn based on the steering input
+    servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
 
 @blynk.handle_event('write V5') # We used pin v4 on the blynk app for steering control. Hence 'write V4'
 def write_virtual_pin_handler(pin, value):
     print("Servo6 value: ",float(value[0])) 
     agent.userSteering[5] = float(value[0]) #updates the AI's memory of steering angle
-    servoControl(float(value[0])) #changes the motors to appropriately turn based on the steering input
+    servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
 
-@blynk.handle_event('write V2') # We used pin v2 on the blynk app for autonomous/learning control. Hence 'write V2'
+@blynk.handle_event('write V6') # We used pin v2 on the blynk app for autonomous/learning control. Hence 'write V2'
 def write_virtual_pin_handler(pin, value):
     agent.aiMode = False if value == 1 else True #change the AI's mode based on the reading 
 
 counter = 0
 while True: #This is the learning loop
     blynk.run()
+    pwm = Adafruit_PCA9685.PCA9685()
+
     if agent.aiMode == False: #This is the AI's Learning mode
         start = time.time()
         state = agent.getState()
