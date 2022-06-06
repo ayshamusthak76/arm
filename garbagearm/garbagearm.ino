@@ -10,7 +10,7 @@
 
 // add Servo library
 // #include <Servo.h>
-//#include <Serial.h>
+#include <Serial.h>
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40);
 #define no_of_servos 6
 
@@ -38,10 +38,11 @@ int base=0;
 
 int s[5];
 
-void write(int i,int value)
+void write1(int i,int value)
 {
-    // s[i].write((int)abs(value));
+    // s[i].write1((int)abs(value));
     s[i]=atp(value);
+    Serial.println("Setting PWMs")
     pwm.setPWM(i,0,s[i]);
     delay(10);
 }
@@ -51,19 +52,19 @@ void write(int i,int value)
 //    return s[i];
 //}
 
-void writeAll(int value)
+void write1All(int value)
 {
     int i;
     for(i=0;i<no_of_servos;i++)
-        // s[i].write(value);
-        write(i,value);
+        // s[i].write1(value);
+        write1(i,value);
 }
 // create flash function (will flash Arduino LED by the number you input)
 void flash(int n) {
   for (int i = 0; i < n; i++) {
-    digitalWrite(13, HIGH);
+    digitalwrite(13, HIGH);
     delay(500);
-    digitalWrite(13, LOW);
+    digitalwrite(13, LOW);
     delay(500);
   }
 }
@@ -75,15 +76,10 @@ void setup() {
 
   // assign Arduino LED to pin 13
   pinMode(13, OUTPUT);
-
-  // attach servo objects to correct pin number
-  // shoulder.attach(11);
-  // elbow.attach(10);
-  // wrist1.attach(9);
-  // wrist2.attach(6);
-  // hand.attach(5);
-  // base.attach(3);
-
+  
+  pwm.begin();
+  
+  pwm.setPWMFreq(60);
   // move arm to home position to face camera down
   homeState();
 }
@@ -105,8 +101,10 @@ void loop() {
     pickUp();
     dropOff();
 
+    pwm.setPWM(0,0,180);
     // go back to home state
     homeState();
+    delay(1000);
 
     // send string to let RPI know that the arm is done moving
     Serial.println("Done Moving");
@@ -123,16 +121,17 @@ void loop() {
    the servo. Bigger number ==> slower speed. Smaller number ==> faster speed.
 */
 void sweep(int servo, int oldPos, int newPos, int servoSpeed) {
+  Serial.println("In SWEEP");
   if (oldPos <= newPos) {
     for (oldPos; oldPos <= newPos; oldPos += 1) {
-      write(servo,oldPos);
+      write1(servo,oldPos);
       delay(servoSpeed);
     }
   }
 
   else if (oldPos >= newPos) {
     for (oldPos; oldPos >= newPos; oldPos -= 1) {
-      write(servo,oldPos);
+      write1(servo,oldPos);
       delay(servoSpeed);
     }
   }
@@ -140,6 +139,7 @@ void sweep(int servo, int oldPos, int newPos, int servoSpeed) {
 
 // pickUp function that will move robotic arm to specified distance and angle sent from RPI
 void pickUp() {  
+  Serial.println("In pickup");
   // if the object detected is closest to the small/closest circle distance preset
   if (distance == 1) {
     sweep(base, basePos, angle, 30);
@@ -243,69 +243,10 @@ void dropOff() {
     material = 0;
   }
 
-  // if the material detected was glass
-  else if (material == 2) {
-    sweep(shoulder, shoulderPos, 90, 30);
-    shoulderPos = 90;
-    sweep(elbow, elbowPos, 0, 30);
-    elbowPos = 0;
-    sweep(wrist2, wrist2Pos, 90, 30);
-    wrist2Pos = 90;
-    sweep(base, basePos, 45, 30);
-    basePos = 45;
-    sweep(hand, handPos, 160, 30);
-    handPos = 160;
-    material = 0;
-  }
-
-  // if the material detected was metal
-  else if (material == 3) {
-    sweep(shoulder, shoulderPos, 90, 30);
-    shoulderPos = 90;
-    sweep(elbow, elbowPos, 0, 30);
-    elbowPos = 0;
-    sweep(wrist2, wrist2Pos, 90, 30);
-    wrist2Pos = 90;
-    sweep(base, basePos, 90, 30);
-    basePos = 90;
-    sweep(hand, handPos, 160, 30);
-    handPos = 160;
-    material = 0;
-  }
-
-  // if the material detected was paper
-  else if (material == 4) {
-    sweep(shoulder, shoulderPos, 90, 30);
-    shoulderPos = 90;
-    sweep(elbow, elbowPos, 0, 30);
-    elbowPos = 0;
-    sweep(wrist2, wrist2Pos, 90, 30);
-    wrist2Pos = 90;
-    sweep(base, basePos, 135, 30);
-    basePos = 135;
-    sweep(hand, handPos, 160, 30);
-    handPos = 160;
-    material = 0;
-  }
-
-  // if the material detected was plastic
-  else if (material == 5) {
-    sweep(shoulder, shoulderPos, 90, 30);
-    shoulderPos = 90;
-    sweep(elbow, elbowPos, 0, 30);
-    elbowPos = 0;
-    sweep(wrist2, wrist2Pos, 90, 30);
-    wrist2Pos = 90;
-    sweep(base, basePos, 180, 30);
-    basePos = 180;
-    sweep(hand, handPos, 160, 30);
-    handPos = 160;
-    material = 0;
-  }
-}
-
 // homeState function that will hold the camera facing down to perform obejct detection
 void homeState() {
+  Serial.println("In homestate");
+  pwm.setPWM(0,0,550);
   sweep(base, basePos, 90, 30);
   basePos = 90;
   sweep(wrist2, wrist2Pos, 60, 30);
@@ -316,6 +257,7 @@ void homeState() {
   shoulderPos = 65;
   sweep(hand, handPos, 90, 30);
   handPos = 90;
+  pwm.setPWM(0,0,550);
 }
 int atp(int ang){ 
   int pulse = map(ang,0, 180, 125,575);// map angle of 0 to 180 to Servo min and Servo max 
