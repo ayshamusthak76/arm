@@ -68,8 +68,8 @@ def move_servo(pwm, servo_channel, angle):
     '''
 
     pwm_step = convert_angle_to_pwm_board_step(angle)
-
     pwm.set_pwm(servo_channel, 0, pwm_step)
+    time.sleep(3)
 
 def automatic_control(pwm, servo_channel):
     print('Move the servo with a test pattern.')
@@ -77,27 +77,27 @@ def automatic_control(pwm, servo_channel):
     time.sleep(3)
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
-    print('Initialize PWM board controller')
-    # Initialise the PCA9685 using the default address (0x40).
-    pwm = Adafruit_PCA9685.PCA9685()
+#     print('Initialize PWM board controller')
+#     # Initialise the PCA9685 using the default address (0x40).
+#     pwm = Adafruit_PCA9685.PCA9685()
 
-    print('Set frequency')
-    # Set the frequency
-    pwm.set_pwm_freq(SERVO_MOTOR_FREQUENCY)
+#     print('Set frequency')
+#     # Set the frequency
+#     pwm.set_pwm_freq(SERVO_MOTOR_FREQUENCY)
 
-    while True:
+    # while True:
         
-        input_data = input("What do you want to do?\n[1] Manual test\n[2] Automatic test\n[x] Exit\nAnswer: ")
+    #     input_data = input("What do you want to do?\n[1] Manual test\n[2] Automatic test\n[x] Exit\nAnswer: ")
 
 
-        if input_data == '2':
-            automatic_control(pwm, servo_channel)
-        elif input_data.lower() == 'x':
-            break
-        else:
-            print('Unrecognized input.')
-            continue
+    #     if input_data == '2':
+    #         automatic_control(pwm, servo_channel)
+    #     elif input_data.lower() == 'x':
+    #         break
+    #     else:
+    #         print('Unrecognized input.')
+    #         continue
 
-        print('Done.')
+    #     print('Done.')
