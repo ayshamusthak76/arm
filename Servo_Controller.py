@@ -41,6 +41,18 @@ def convert_angle_to_pwm_board_step(angle):
     To calculate the step, we first calculate the relative duty cycle of the angle.
     We then multiply the PWM_BOARD_RESOLUTION by the duty cycle (which is a percentage).
     '''
+
+    #mapping values from -1 to 1 as 0 to 270
+    # calculated angle gives angles between (-90,90) NOT (0,180)
+    # if statements used to convert the (-90,90) angles to (0,180)
+
+    
+    # x in range [a,b] to y in range [c,d]
+    #formula y = (x-a)((d-c)/(b-a)) + c
+
+    #converting [-1,1] to [0,270] 
+    angle = (angle-(-1))((270-0)/(1-(-1))) + 1 
+
     # Check that the angle is within the limits
     if (angle < SERVO_MOTOR_ANGLE_MIN) | (angle > SERVO_MOTOR_ANGLE_MAX):
         raise ValueError('The given angle ({}) is outside the limits!'.format(angle))
