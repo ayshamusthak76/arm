@@ -8,15 +8,15 @@ from tensorflow.keras.optimizers import Adam  #Import optimizers for the Neural 
 import tensorflow as tf #import Tensorflow
 from tensorflow.keras.models import model_from_json #Import tensorflow file saving
 import blynklib #Import Blynk library
-import RPi.GPIO as GPIO  # Import Raspberry Pi GPIO library
+# import RPi.GPIO as GPIO  # Import Raspberry Pi GPIO library
 import Servo_Controller as sc
 
 import time
 # Import the PCA9685 module.
 import Adafruit_PCA9685
 
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)  # Use physical pin numbering
+# GPIO.setwarnings(False)
+# GPIO.setmode(GPIO.BCM)  # Use physical pin numbering
 # motor1 = 13 #GPIO Pin for motor1
 # motor2 = 12 #GPIO Pin for motor2
 
@@ -75,7 +75,7 @@ class Agent:
             Dense(384, activation='relu'),
             Dense(64, activation="relu", name="layer1"),
             Dense(8, activation="relu", name="layer2"),
-            Dense(1, activation="linear", name="layer3"),
+            Dense(6, activation="linear", name="layer3"),
         ])
         self.model.compile(loss='mean_squared_error', optimizer=Adam(lr=0.05))
         #self.model.load_weights("selfdrive.h5") # use this to import your pretrained weights
@@ -88,14 +88,15 @@ class Agent:
         state = np.reshape(state, (1, 240, 320, 3))
         # action = self.model.predict(state)[0][0]
         # action = (action * 2) - 1
-        actionset = self.model.predict(state)[0][0] ############CHANGE THIS AND MAYBE THE STATE ALSO BECAUSE OF THAT
-        actionset = list((i*2)-1 for i in actionset)
+        actionset = self.model.predict(state)[0] ############CHANGE THIS AND MAYBE THE STATE ALSO BECAUSE OF THAT
+        print(actionset)
+        actionset = np.array(list((i*2)-1 for i in actionset))
         servoControl(action)
         return action
 
     def learn(self, state, action): #This method is where the AI's Neural net improves/learns
         state = np.reshape(state, (1, 240,320,3))
-        history = self.model.fit(state, [action], batch_size=1, epochs=1, verbose=0)
+        history = self.model.fit(np.array(state), np.array([action]), batch_size=1, epochs=1, verbose=0)
         print("LOSS: ", history.history.get("loss")[0])
 
     def getState(self):
@@ -106,47 +107,47 @@ class Agent:
 
     def observeAction(self):
         # return (self.userSteering + 1) / 2
-        list((i+1)/2 for i in self.userSteering) 
+        return np.array(list((i+1)/2 for i in self.userSteering))
 
 agent = Agent() 
-BLYNK_AUTH = 'insert your code here' #insert your blynk code from your blynk project
+BLYNK_AUTH = 'EWAGC3cic32I6zvc5tsWdEm8uR3E_91w' #insert your blynk code from your blynk project
 blynk = blynklib.Blynk(BLYNK_AUTH)
 
 @blynk.handle_event('write V0') # We used pin v4 on the blynk app for steering control. Hence 'write V4'
 def write_virtual_pin_handler(pin, value):
     print("Servo1 value: ",float(value[0])) 
     agent.userSteering[0] = float(value[0]) #updates the AI's memory of steering angle
-    servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
+    # servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
 
 @blynk.handle_event('write V1') # We used pin v4 on the blynk app for steering control. Hence 'write V4'
 def write_virtual_pin_handler(pin, value):
     print("Servo2 value: ",float(value[0])) 
     agent.userSteering[1] = float(value[0]) #updates the AI's memory of steering angle
-    servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
+    # servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
 
 @blynk.handle_event('write V2') # We used pin v4 on the blynk app for steering control. Hence 'write V4'
 def write_virtual_pin_handler(pin, value):
     print("Servo3 value: ",float(value[0])) 
     agent.userSteering[2] = float(value[0]) #updates the AI's memory of steering angle
-    servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
+    # servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
 
 @blynk.handle_event('write V3') # We used pin v4 on the blynk app for steering control. Hence 'write V4'
 def write_virtual_pin_handler(pin, value):
     print("Servo4 value: ",float(value[0])) 
     agent.userSteering[3] = float(value[0]) #updates the AI's memory of steering angle
-    servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
+    # servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
 
 @blynk.handle_event('write V4') # We used pin v4 on the blynk app for steering control. Hence 'write V4'
 def write_virtual_pin_handler(pin, value):
     print(" Servo5 value: ",float(value[0])) 
     agent.userSteering[4] = float(value[0]) #updates the AI's memory of steering angle
-    servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
+    # servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
 
 @blynk.handle_event('write V5') # We used pin v4 on the blynk app for steering control. Hence 'write V4'
 def write_virtual_pin_handler(pin, value):
     print("Servo6 value: ",float(value[0])) 
     agent.userSteering[5] = float(value[0]) #updates the AI's memory of steering angle
-    servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
+    # servoControl(pwm, pin, float(value[0])) #changes the motors to appropriately turn based on the steering input
 
 @blynk.handle_event('write V6') # We used pin v2 on the blynk app for autonomous/learning control. Hence 'write V2'
 def write_virtual_pin_handler(pin, value):
@@ -155,7 +156,7 @@ def write_virtual_pin_handler(pin, value):
 counter = 0
 while True: #This is the learning loop
     blynk.run()
-    pwm = Adafruit_PCA9685.PCA9685()
+    # pwm = Adafruit_PCA9685.PCA9685()
 
     if agent.aiMode == False: #This is the AI's Learning mode
         start = time.time()
