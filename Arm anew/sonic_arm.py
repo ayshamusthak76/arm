@@ -20,23 +20,31 @@ time.sleep(5)
 
 def home(pwm):
     sc.move_servo(pwm, 4, 135)
-    #set
     sc.move_servo(pwm,5, 160)
-    sc.move_servo(pwm, 6, 230)
+    sc.move_servo(pwm, 6, 2 )
     sc.move_servo(pwm,7, 100)
     sc.move_servo(pwm,8, 80)
     sc.move_servo(pwm,9, 45)
 
-def pickup(pwm):
+def pickup(pwm, dist):
     sc.move_servo(pwm,9, 0)
     sc.move_servo(pwm, 4, 135)
-    #set
-    sc.move_servo(pwm,5, 70)
-    sc.move_servo(pwm, 6, 200)
+    #changing according to dist 0 to 25
+    if dist <15:
+        sc.move_servo(pwm,5, 70)
+        sc.move_servo(pwm, 6, 200)
+    elif dist<20:
+        sc.move_servo(pwm,5, 70)
+        sc.move_servo(pwm, 6, 200)
+    elif dist<25:
+        sc.move_servo(pwm,5, 70)
+        sc.move_servo(pwm, 6, 200)
+    #changing according to dist end
     sc.move_servo(pwm,7, 100)
     sc.move_servo(pwm,8, 100)
     sc.move_servo(pwm,9, 270)
     
+
 def check_dist():
 
 ##############3
@@ -89,8 +97,8 @@ if __name__ == "__main__":
     while True:
         dist = check_dist()
         print(dist)
-        if dist < 15:
+        if dist < 26:
             print("picking up")
-            pickup(pwm)
+            pickup(pwm, dist)
             print("home")
             home(pwm)
