@@ -2,9 +2,13 @@ import speech_recognition as sr
 from datetime import date, datetime
 from time import sleep
 import pyttsx3
+import Ultrasonic_arm
+import car 
 
 r = sr.Recognizer()
 mic = sr.Microphone()
+
+car_start = 0
 
 print("hello")
 
@@ -31,6 +35,7 @@ def wishMe():
     
 
 def takeCommand():
+    global car_start
     query = None
     while query is None:
         r = sr.Recognizer()
@@ -59,19 +64,32 @@ def takeCommand():
     
     # elif 'stop' in words:
     elif query.find('stop') != -1:
-
-        speak("Getting the motors to a stop!")
+        if car_start == 0:
+            speak("Getting the motors to a stop!")
+            car.stop(1)
+            car_start = 0
+        else:
+            speak("The car has not started yet! Let me know if you want to start it!")         
+            
 
     # elif 'start moving' or 'get going' in words:
     elif query.find('start') != -1:
-        speak("Sure! Will get the robot started!")      
+          
+        if car_start != 0:
+            car_start = 1
+            speak("Sure! Will get the robot started!") 
+            car.start_car()
+            #car_Start function()
+            # 
+        else:
+            speak("The car is already moving!")
     
-if __name__ == "__main__":
-    print("Initializing Amity Bot")
-    # speak("Initializing... Amity Bot...")
-    wishMe()
-    while True:      
-        takeCommand()
+# if __name__ == "__main__":
+#     print("Initializing Amity Bot")
+#     # speak("Initializing... Amity Bot...")
+#     wishMe()
+#     while True:      
+#         takeCommand()
 
 
 ##########################
