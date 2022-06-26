@@ -3,8 +3,10 @@ import RPi.GPIO as GPIO
 # GPIO.setmode(GPIO.BOARD)
 GPIO.setmode(GPIO.BCM)
 import motors
+import arm
 import socket
-
+import speech
+import os
 motors.stop()
 
 # Get server ip
@@ -18,7 +20,7 @@ app = Flask(__name__)
 @app.route('/')
 def index():
 
-	return render_template('index.html', server_ip=server_ip)
+	return render_template('index copy.html', server_ip=server_ip)
 
 @app.route('/<changepin>', methods=['POST'])
 def reroute(changepin):
@@ -33,10 +35,28 @@ def reroute(changepin):
 		motors.turnRight()
 	elif changePin == 4:
 		motors.backward()
+	
+		
+		# arm.home()
+	elif changePin == 7:
+		arm.wave()
+	# elif changePin == 8:
+	# 	arm.arm()
+	elif changePin == 8:
+		speech.wishMe()
+		while True:
+			speech.takeCommand()         
+			print("Wrong command")
+	elif changePin == 9:
+		# speech.wishMe()
+		speech.takeCommand()         
+	elif changePin == 9:
+		arm.wave()
+	elif changePin == 10:
+		os.system('python car.py')
+	
 	elif changePin == 5:
 		motors.stop()
-	else:
-		print("Wrong command")
 
 	response = make_response(redirect(url_for('index')))
 	return(response)

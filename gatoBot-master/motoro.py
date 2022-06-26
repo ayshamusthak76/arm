@@ -56,9 +56,9 @@ def backward():
 	# GPIO.output(Motor1B,GPIO.LOW)
 	# GPIO.output(Motor2A,GPIO.HIGH)
 	# GPIO.output(Motor2B,GPIO.LOW)
-	GPIO.output(Motor1A,GPIO.LOW)
+	GPIO.output(Motor1A,GPIO.HIGH)
 	GPIO.output(Motor1B,GPIO.LOW)
-	GPIO.output(Motor2A,GPIO.HIGH)
+	GPIO.output(Motor2A,GPIO.LOW)
 	GPIO.output(Motor2B,GPIO.HIGH)
 	
 
@@ -67,9 +67,9 @@ def forward():
 	# GPIO.output(Motor1B,GPIO.HIGH)
 	# GPIO.output(Motor2A,GPIO.LOW)
 	# GPIO.output(Motor2B,GPIO.HIGH)
-	GPIO.output(Motor1A,GPIO.HIGH)
+	GPIO.output(Motor1A,GPIO.LOW)
 	GPIO.output(Motor1B,GPIO.HIGH)
-	GPIO.output(Motor2A,GPIO.LOW)
+	GPIO.output(Motor2A,GPIO.HIGH)
 	GPIO.output(Motor2B,GPIO.LOW)
 
 	
@@ -79,11 +79,10 @@ def turnLeft():
 	# GPIO.output(Motor1B,GPIO.LOW)
 	# GPIO.output(Motor2A,GPIO.LOW)
 	# GPIO.output(Motor2B,GPIO.HIGH)
-	GPIO.output(Motor1A,GPIO.LOW)
+	GPIO.output(Motor1A,GPIO.HIGH)
 	GPIO.output(Motor1B,GPIO.HIGH)
-	GPIO.output(Motor2A,GPIO.HIGH)
+	GPIO.output(Motor2A,GPIO.LOW)
 	GPIO.output(Motor2B,GPIO.LOW)
-	
 
 def turnRight():
 	print("Going Right")
@@ -91,12 +90,11 @@ def turnRight():
 	# GPIO.output(Motor1B,GPIO.HIGH)
 	# GPIO.output(Motor2A,GPIO.HIGH)
 	# GPIO.output(Motor2B,GPIO.LOW)
-	GPIO.output(Motor1A,GPIO.HIGH)
+	
+	GPIO.output(Motor1A,GPIO.LOW)
 	GPIO.output(Motor1B,GPIO.LOW)
-	GPIO.output(Motor2A,GPIO.LOW)
+	GPIO.output(Motor2A,GPIO.HIGH)
 	GPIO.output(Motor2B,GPIO.HIGH)
-	
-	
 
 # def home():
 #     print('home')
