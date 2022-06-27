@@ -1,0 +1,143 @@
+python: can't open file '/home/pi/ActiveArm/app.py': [Errno 2] No such file or directory
+Initialize PWM board controller
+Traceback (most recent call last):
+  File "/home/pi/ActiveArm/app.py", line 91, in <module>
+    pwm = Adafruit_PCA9685.PCA9685()
+  File "/home/pi/.local/lib/python3.9/site-packages/Adafruit_PCA9685/PCA9685.py", line 75, in __init__
+    self.set_all_pwm(0, 0)
+  File "/home/pi/.local/lib/python3.9/site-packages/Adafruit_PCA9685/PCA9685.py", line 111, in set_all_pwm
+    self._device.write8(ALL_LED_ON_L, on & 0xFF)
+  File "/home/pi/.local/lib/python3.9/site-packages/Adafruit_GPIO/I2C.py", line 114, in write8
+    self._bus.write_byte_data(self._address, register, value)
+  File "/home/pi/.local/lib/python3.9/site-packages/Adafruit_PureIO/smbus.py", line 327, in write_byte_data
+    self._device.write(data)
+OSError: [Errno 121] Remote I/O error
+Initialize PWM board controller
+Traceback (most recent call last):
+  File "/home/pi/ActiveArm/app.py", line 91, in <module>
+    pwm = Adafruit_PCA9685.PCA9685()
+  File "/home/pi/.local/lib/python3.9/site-packages/Adafruit_PCA9685/PCA9685.py", line 75, in __init__
+    self.set_all_pwm(0, 0)
+  File "/home/pi/.local/lib/python3.9/site-packages/Adafruit_PCA9685/PCA9685.py", line 111, in set_all_pwm
+    self._device.write8(ALL_LED_ON_L, on & 0xFF)
+  File "/home/pi/.local/lib/python3.9/site-packages/Adafruit_GPIO/I2C.py", line 114, in write8
+    self._bus.write_byte_data(self._address, register, value)
+  File "/home/pi/.local/lib/python3.9/site-packages/Adafruit_PureIO/smbus.py", line 327, in write_byte_data
+    self._device.write(data)
+OSError: [Errno 121] Remote I/O error
+Initialize PWM board controller
+Set frequency
+Starting Server
+hello
+ * Serving Flask app "app" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+Traceback (most recent call last):
+  File "/home/pi/ActiveArm/app.py", line 99, in <module>
+    app.run(debug=True,
+  File "/usr/lib/python3/dist-packages/flask/app.py", line 990, in run
+    run_simple(host, port, self, **options)
+  File "/home/pi/.local/lib/python3.9/site-packages/werkzeug/serving.py", line 1017, in run_simple
+    inner()
+  File "/home/pi/.local/lib/python3.9/site-packages/werkzeug/serving.py", line 957, in inner
+    srv = make_server(
+  File "/home/pi/.local/lib/python3.9/site-packages/werkzeug/serving.py", line 789, in make_server
+    return ThreadedWSGIServer(
+  File "/home/pi/.local/lib/python3.9/site-packages/werkzeug/serving.py", line 693, in __init__
+    super().__init__(server_address, handler)  # type: ignore
+  File "/usr/lib/python3.9/socketserver.py", line 452, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.9/http/server.py", line 138, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.9/socketserver.py", line 466, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Initialize PWM board controller
+Set frequency
+Starting Server
+hello
+ * Serving Flask app "app" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+Traceback (most recent call last):
+  File "/home/pi/ActiveArm/app.py", line 99, in <module>
+    app.run(debug=True,
+  File "/usr/lib/python3/dist-packages/flask/app.py", line 990, in run
+    run_simple(host, port, self, **options)
+  File "/home/pi/.local/lib/python3.9/site-packages/werkzeug/serving.py", line 1017, in run_simple
+    inner()
+  File "/home/pi/.local/lib/python3.9/site-packages/werkzeug/serving.py", line 957, in inner
+    srv = make_server(
+  File "/home/pi/.local/lib/python3.9/site-packages/werkzeug/serving.py", line 789, in make_server
+    return ThreadedWSGIServer(
+  File "/home/pi/.local/lib/python3.9/site-packages/werkzeug/serving.py", line 693, in __init__
+    super().__init__(server_address, handler)  # type: ignore
+  File "/usr/lib/python3.9/socketserver.py", line 452, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.9/http/server.py", line 138, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.9/socketserver.py", line 466, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Initialize PWM board controller
+Set frequency
+Starting Server
+hello
+ * Serving Flask app "app" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+Traceback (most recent call last):
+  File "/home/pi/ActiveArm/app.py", line 99, in <module>
+    app.run(debug=True,
+  File "/usr/lib/python3/dist-packages/flask/app.py", line 990, in run
+    run_simple(host, port, self, **options)
+  File "/home/pi/.local/lib/python3.9/site-packages/werkzeug/serving.py", line 1017, in run_simple
+    inner()
+  File "/home/pi/.local/lib/python3.9/site-packages/werkzeug/serving.py", line 957, in inner
+    srv = make_server(
+  File "/home/pi/.local/lib/python3.9/site-packages/werkzeug/serving.py", line 789, in make_server
+    return ThreadedWSGIServer(
+  File "/home/pi/.local/lib/python3.9/site-packages/werkzeug/serving.py", line 693, in __init__
+    super().__init__(server_address, handler)  # type: ignore
+  File "/usr/lib/python3.9/socketserver.py", line 452, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.9/http/server.py", line 138, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.9/socketserver.py", line 466, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Initialize PWM board controller
+Set frequency
+Starting Server
+hello
+ * Serving Flask app "app" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+Traceback (most recent call last):
+  File "/home/pi/ActiveArm/app.py", line 100, in <module>
+    app.run(debug=True,
+  File "/usr/lib/python3/dist-packages/flask/app.py", line 990, in run
+    run_simple(host, port, self, **options)
+  File "/home/pi/.local/lib/python3.9/site-packages/werkzeug/serving.py", line 1017, in run_simple
+    inner()
+  File "/home/pi/.local/lib/python3.9/site-packages/werkzeug/serving.py", line 957, in inner
+    srv = make_server(
+  File "/home/pi/.local/lib/python3.9/site-packages/werkzeug/serving.py", line 789, in make_server
+    return ThreadedWSGIServer(
+  File "/home/pi/.local/lib/python3.9/site-packages/werkzeug/serving.py", line 693, in __init__
+    super().__init__(server_address, handler)  # type: ignore
+  File "/usr/lib/python3.9/socketserver.py", line 452, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.9/http/server.py", line 138, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.9/socketserver.py", line 466, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
